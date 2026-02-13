@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student form</title>
+</head>
+<body>
+    <h1>Student form</h1>
+    <div style="text-align: right;">
+        <a href="/logout" style="color: red; text-decoration: none; font-weight: bold;">Logout</a>
+    </div>
+    <form action="/submit" method="POST">
+         <label for="id">ID:</label>
+        <input type="number" id="id" name="id" required><br><br>
+
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" required><br><br>
+        <button type="submit">Submit</button>
+    </form>
+    <hr>
+    <h3>Submitted Data:</h3>
+    <ul>
+        <% allStudents.filter(student => student !== null).forEach(student => { %>
+            <li>ID: <%= student.id %>, <%= student.name %> - Age: <%= student.age %></li>
+        <% }) %>
+    </ul>
+</body>
+</html>

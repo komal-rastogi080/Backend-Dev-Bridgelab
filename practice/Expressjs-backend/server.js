@@ -7,23 +7,25 @@ app.use(express.json());
 const PORT = 8001;
 
 const readfile = () => {
-  const data = fs.readFileSync("./db.json", "utf-8");
+  const data = fs.readFileSync("./students.json", "utf-8");
   return JSON.parse(data);
 };
 const writefile = (data) => {
-  fs.writeFileSync("./db.json", JSON.stringify(data));
+  fs.writeFileSync("practice/Expressjs-backend/students.json", JSON.stringify(data));
 }
 
-const students=readfile();
+
 app.get("/", (req, res) => {
   res.send("WELCOME to HOME PAGE");
 });
 
 app.get("/students", (req, res) => {
+    const students = readfile();
   res.json(students);
 });
 
 app.post("/students", (req, res) => {
+  const students=readfile();
   const newStudent = req.body;
   const studentid=newStudent.id;
   const exist=students.find((s)=>s.id===studentid);
@@ -39,6 +41,7 @@ app.post("/students", (req, res) => {
 });
 
 app.get("/students/:id", (req, res) => {
+  const students=readfile();
   const studentId = parseInt(req.params.id);
   const student = students.find((s) => s.id === studentId);
   if (student) {
@@ -49,11 +52,13 @@ app.get("/students/:id", (req, res) => {
 });
 
 app.get("/search", (req, res) => {
+    const students=readfile();
     const branch = req.query.branch;
     const foundStudents = students.filter(student => student.branch === branch);
     res.json(foundStudents);
 });
 app.put("/students/:id", (req, res) => {
+  const students=readfile();
   const studentId = parseInt(req.params.id);
   const foundIndex = students.findIndex((s) => s.id === studentId);
   if(foundIndex === -1){
@@ -66,6 +71,7 @@ app.put("/students/:id", (req, res) => {
   return res.status(200).json(result);
 })
 app.delete("/students/:id", (req, res) => {
+  const students=readfile();
   const studentId = parseInt(req.params.id);
   const foundIndex = students.findIndex((s) => s.id === studentId);
   if(foundIndex === -1){
