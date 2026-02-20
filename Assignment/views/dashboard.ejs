@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books & Authors Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Books & Authors Dashboard</h1>
+            <p class="subtitle">Express REST API Management System</p>
+        </header>
+
+        <!-- Statistics Cards -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon">📖</div>
+                <div class="stat-info">
+                    <div class="stat-number"><%= stats.totalBooks %></div>
+                    <div class="stat-label">Total Books</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"></div>
+                <div class="stat-info">
+                    <div class="stat-number"><%= stats.totalAuthors %></div>
+                    <div class="stat-label">Total Authors</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📅</div>
+                <div class="stat-info">
+                    <div class="stat-number"><%= Object.keys(stats.booksByYear).length %></div>
+                    <div class="stat-label">Years Covered</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🌍</div>
+                <div class="stat-info">
+                    <div class="stat-number"><%= Object.keys(stats.authorsByNationality).length %></div>
+                    <div class="stat-label">Nationalities</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Endpoints -->
+        <section class="api-section">
+            <h2> API Endpoints</h2>
+            <div class="endpoint-grid">
+                <div class="endpoint-card">
+                    <h3>Books API</h3>
+                    <ul class="endpoint-list">
+                        <li><span class="method get">GET</span> <code>/api/books</code></li>
+                        <li><span class="method get">GET</span> <code>/api/books/search?title=gatsby</code></li>
+                        <li><span class="method get">GET</span> <code>/api/books?author=Orwell</code></li>
+                        <li><span class="method post">POST</span> <code>/api/books</code></li>
+                        <li><span class="method put">PUT</span> <code>/api/books/:id</code></li>
+                        <li><span class="method delete">DELETE</span> <code>/api/books/:id</code></li>
+                    </ul>
+                </div>
+                <div class="endpoint-card">
+                    <h3>Authors API</h3>
+                    <ul class="endpoint-list">
+                        <li><span class="method get">GET</span> <code>/api/authors</code></li>
+                        <li><span class="method get">GET</span> <code>/api/authors/:id</code></li>
+                        <li><span class="method post">POST</span> <code>/api/authors</code></li>
+                        <li><span class="method put">PUT</span> <code>/api/authors/:id</code></li>
+                        <li><span class="method patch">PATCH</span> <code>/api/authors/:id</code></li>
+                        <li><span class="method delete">DELETE</span> <code>/api/authors/:id</code></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Books Table -->
+        <section class="data-section">
+            <div class="section-header">
+                <h2> Books Collection</h2>
+                <span class="count-badge"><%= books.length %> books</span>
+            </div>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Year</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (books.length > 0) { %>
+                            <% books.forEach(book => { %>
+                                <tr>
+                                    <td><span class="id-badge">#<%= book.id %></span></td>
+                                    <td class="title-cell"><strong><%= book.title %></strong></td>
+                                    <td><%= book.author %></td>
+                                    <td><span class="year-badge"><%= book.year %></span></td>
+                                </tr>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="4" class="empty-state">No books available</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Authors Table -->
+        <section class="data-section">
+            <div class="section-header">
+                <h2>✍️ Authors Collection</h2>
+                <span class="count-badge"><%= authors.length %> authors</span>
+            </div>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Birth Year</th>
+                            <th>Nationality</th>
+                            <th>Biography</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (authors.length > 0) { %>
+                            <% authors.forEach(author => { %>
+                                <tr>
+                                    <td><span class="id-badge">#<%= author.id %></span></td>
+                                    <td class="name-cell"><strong><%= author.name %></strong></td>
+                                    <td><%= author.birthYear || 'N/A' %></td>
+                                    <td><span class="nationality-badge"><%= author.nationality %></span></td>
+                                    <td class="bio-cell"><%= author.biography %></td>
+                                </tr>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="5" class="empty-state">No authors available</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Books by Year Chart -->
+        <section class="data-section">
+            <h2> Books by Year Distribution</h2>
+            <div class="chart-container">
+                <% 
+                const maxCount = Math.max(...Object.values(stats.booksByYear));
+                for (const [year, count] of Object.entries(stats.booksByYear).sort((a, b) => a[0] - b[0])) { 
+                    const percentage = (count / maxCount) * 100;
+                %>
+                    <div class="chart-item">
+                        <div class="chart-label"><%= year %></div>
+                        <div class="chart-bar-container">
+                            <div class="chart-bar" style="width: <%= percentage %>%">
+                                <span class="chart-value"><%= count %></span>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        </section>
+
+        <!-- Authors by Nationality -->
+        <section class="data-section">
+            <h2> Authors by Nationality</h2>
+            <div class="nationality-grid">
+                <% for (const [nationality, count] of Object.entries(stats.authorsByNationality)) { %>
+                    <div class="nationality-card">
+                        <div class="nationality-name"><%= nationality %></div>
+                        <div class="nationality-count"><%= count %> author<%= count !== 1 ? 's' : '' %></div>
+                    </div>
+                <% } %>
+            </div>
+        </section>
+
+        
+    </div>
+</body>
+</html>
