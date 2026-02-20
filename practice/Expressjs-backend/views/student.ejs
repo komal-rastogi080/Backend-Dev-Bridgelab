@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Students List</title>
+</head>
+<body>
+    <h1>Students List</h1>
+
+    <form method="GET" action="/students">
+        <label>Filter by Branch:</label>
+        <input type="text" name="branch" value="<%= branch %>" placeholder="e.g. CSE">
+        <button type="submit">Apply Filter</button>
+    </form>
+
+    <p>Total Students: <%= total %></p>
+
+    <% if (students.length === 0) { %>
+        <h3>No students registered</h3>
+    <% } else { %>
+
+    <table border="1" cellpadding="10">
+        <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Branch</th>
+            <th>Action</th>
+        </tr>
+
+        <% students.forEach(student => { %>
+            <tr>
+                <td><%= student.name %></td>
+                <td><%= student.age %></td>
+                <td><%= student.branch %></td>
+                <td>
+                    <a href="/students/delete/<%= student.id %>">Delete</a>
+                </td>
+            </tr>
+        <% }) %>
+    </table>
+
+    <% } %>
+
+    <br>
+    <a href="/">Add New Student</a>
+</body>
+</html>
