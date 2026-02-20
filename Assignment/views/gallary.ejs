@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery</title>
+</head>
+<body>
+    <h1>Photo Gallery</h1>
+    <div class="gallery">
+        <%images.forEach(image => { %>
+            <div class="gallery-item">
+                <img src="/assets/<%= image.filename %>" alt="<%= image.title %>">
+                <div class="caption">
+                    <h3><%= image.title %></h3>
+                    <% if (image.description) { %>
+                        <p><%= image.description %></p>
+                    <% } %>
+                </div>
+            </div>
+    <% }) %>
+</body>
+</html>
